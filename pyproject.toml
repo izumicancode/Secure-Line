@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "secure-line"
+version = "3.0.0"
+description = "A verified, end-to-end-encrypted, mesh-relayed LAN chat app (bitchat-inspired dark UI)."
+requires-python = ">=3.10"
+dependencies = [
+    "cryptography>=41.0",
+    "Pillow>=10.0",
+]
+
+[project.scripts]
+secure-line = "secure_line.main:main"
+
+[tool.setuptools.packages.find]
+include = ["secure_line*"]
