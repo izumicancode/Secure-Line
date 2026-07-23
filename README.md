@@ -206,14 +206,6 @@ feature would live.
 
 <br>
 
-## License
-
-No license file is included yet — add one (MIT is a common default for
-projects like this) before you publish, so people know what they're
-allowed to do with the code.
-
-<br>
-
 <div align="center">
 
 
