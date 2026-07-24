@@ -6,8 +6,6 @@
 **A verified, end-to-end-encrypted, mesh-relayed chat app for your LAN.**
 No servers. No cloud. No accounts anywhere but the device in your hands.
 
-*Dark, monospace, terminal-radio aesthetic — inspired by bitchat, built from scratch.*
-
 </div>
 
 <br>
