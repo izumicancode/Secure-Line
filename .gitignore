@@ -77,7 +77,7 @@ local_settings.py
 # Secure Line specific
 secure_line.egg-info/
 
-# Temporary files
+# Temporary file-system
 *.tmp
 *.temp
 *~
