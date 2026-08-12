@@ -3,7 +3,7 @@
 
 # 📡 L I N E
 
-**A verified, end-to-end-encrypted, mesh-relayed chat app for your LAN.**
+**A verified end-to-end-encrypted, mesh-relayed chat app for your LAN.**
 No servers. No cloud. No accounts anywhere but the device in your hands.
 
 </div>
