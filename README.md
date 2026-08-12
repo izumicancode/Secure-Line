@@ -17,7 +17,7 @@ room, a boat with no signal — into a private, encrypted chat mesh. Every
 device on the network discovers the others automatically, every
 conversation is end-to-end encrypted with a ratcheting key schedule
 (the same idea Signal uses), and nothing ever touches a server, because
-there isn't one.
+there isn't one).
 
 Open two laptops on the same WiFi, run `python -m secure_line` on both,
 and you're talking — encrypted, peer-to-peer, no sign-up screen asking
