@@ -1,5 +1,7 @@
 """Entry point: prepares the local data directory and display, then hands
 off to LineApp. Run with `python -m secure_line`."""
+import argparse
+import sys
 import tkinter as tk
 from tkinter import font as tkfont
 
@@ -10,7 +12,25 @@ from .storage import _secure_makedirs
 from .theme import BODY, VOID
 
 
+def _parse_args(argv=None):
+    parser = argparse.ArgumentParser(
+        prog="secure-line",
+        description="A verified, end-to-end-encrypted, mesh-relayed LAN chat app.",
+    )
+    parser.add_argument(
+        "--version", action="store_true",
+        help="print the installed Secure Line version and exit",
+    )
+    return parser.parse_args(argv)
+
+
 def main():
+    args = _parse_args()
+    if args.version:
+        from . import __version__
+        print(f"secure-line {__version__}")
+        sys.exit(0)
+
     _secure_makedirs(STORE_ROOT)
     _enable_hidpi_awareness()
     try_configure_firewall()

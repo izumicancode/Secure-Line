@@ -6,6 +6,8 @@ Nothing here touches the network.
     identity.py    create/unlock a password-wrapped identity
     store.py       load/save the encrypted per-callsign data blob
     panic.py       bitchat-style panic wipe
+    search.py      offline search across decrypted chat histories
+    export.py      Markdown/JSON export of a decrypted conversation
 
 A new persisted feature (e.g. a new store field) touches store.py only;
 a new identity scheme gets its own file alongside identity.py.
@@ -17,3 +19,5 @@ from .paths import (
 from .identity import create_account, unlock_account, WrongPassword, DeviceAlreadyHasAccount
 from .store import load_store, save_store, _derive_store_key, _derive_file_key
 from .panic import panic_wipe
+from .search import search_histories, highlight, SearchResult
+from .export import export_markdown, export_json, write_export

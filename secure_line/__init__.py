@@ -23,6 +23,18 @@ file instead of a large monolith:
 
 See each subpackage's __init__.py for the file-by-file breakdown.
 """
-__version__ = "3.1.0"
+__version__ = "3.2.0"
 
-from .main import main  # noqa: F401 -- convenience: `from secure_line import main`
+
+def __getattr__(name):
+    # Lazy: `secure_line.main` pulls in tkinter (GUI), which isn't
+    # installed in every environment (headless CI, unit tests that only
+    # exercise crypto/storage/etc.). Importing it eagerly here used to
+    # make the whole package - including non-GUI subpackages - unusable
+    # without a display/Tk. Deferring the import means
+    # `from secure_line import main` still works when Tk is available,
+    # while `import secure_line.crypto` (etc.) works everywhere.
+    if name == "main":
+        from .main import main as _main
+        return _main
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

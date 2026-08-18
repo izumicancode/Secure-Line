@@ -6,6 +6,9 @@
 **A verified end-to-end-encrypted, mesh-relayed chat app for your LAN.**
 No servers. No cloud. No accounts anywhere but the device in your hands.
 
+[![CI](https://github.com/izumicancode/Secure-Line/actions/workflows/ci.yml/badge.svg)](https://github.com/izumicancode/Secure-Line/actions/workflows/ci.yml)
+![Version](https://img.shields.io/badge/version-3.2.0-39FF88)
+
 </div>
 
 <br>
@@ -51,6 +54,8 @@ for your phone number.
 | ⭐ **Favorites**                   | Pin the people you talk to most to the top of your peer list. |
 | ✅ **Safety numbers**              | Compare a short fingerprint out-of-band with a peer and mark them verified — the same trust model Signal popularized. |
 | ☢️ **Panic wipe**                  | One confirmed tap instantly and irreversibly deletes your local identity and history. No undo, on purpose. |
+| 🔍 **Chat search**                 | Search every DM and channel at once, with matches highlighted — all local, over already-decrypted history. |
+| 📤 **Conversation export**         | Export any DM or channel to a Markdown transcript or JSON, on demand — nothing is exported automatically. |
 
 <br>
 
@@ -83,6 +88,26 @@ can read it.
 **Sending a file:** open a chat or channel, click 📎, choose *Send a
 file* or *Send a folder*. The recipient gets a real, openable,
 downloadable copy — not just a name.
+
+**Checking your version:**
+
+```bash
+secure-line --version
+```
+
+<br>
+
+## 🧪 Development
+
+```bash
+pip install -e .[dev]
+pytest tests/ -v
+```
+
+The test suite (36 tests) covers the crypto core, the storage layer,
+search, and export — everything that doesn't need a display. It runs
+against a temp store directory, so it's safe to run repeatedly and never
+touches real `line_data/`. CI runs it on Python 3.10–3.12 on every push.
 
 <br>
 
@@ -150,7 +175,7 @@ secure_line/
 | ------------ | ------------------------------------------------------------ |
 | `constants/` | `network.py`, `mesh.py`, `channels.py`, `storage.py`, `ephemeral.py` |
 | `crypto/`    | `encoding.py`, `keys.py`, `channel_keys.py`, `ratchet.py`, `envelope.py` |
-| `storage/`   | `paths.py`, `identity.py`, `store.py`, `panic.py`            |
+| `storage/`   | `paths.py`, `identity.py`, `store.py`, `panic.py`, `search.py`, `export.py` |
 | `node/`      | `wire.py`, `discovery.py`, `messaging.py`, `channels.py`, `core.py` |
 | `widgets/`   | `shapes.py`, `cards.py`, `bubbles.py`, `file_card.py`, `attach_menu.py`, `pills.py`, `badges.py`, `buttons.py`, `hover.py` |
 | `app/`       | `login.py`, `core.py`, `layout.py`, `sidebar.py`, `channels.py`, `messaging.py`, `events.py`, `safety.py` |
@@ -183,6 +208,10 @@ secure_line/
 - [ ] Read receipts inside channels, not just DMs
 - [ ] Optional relay-through-internet for off-LAN reachability
 - [ ] Mobile client
+- [ ] Wire chat search and export into the GUI (the storage-layer
+      building blocks landed in 3.2.0 — `storage/search.py` and
+      `storage/export.py` — the search bar / export button in `app/`
+      is still open)
 
 Pull requests welcome — see the project layout above for where a given
 feature would live.
