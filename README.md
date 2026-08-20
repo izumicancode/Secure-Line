@@ -9,6 +9,9 @@ No servers. No cloud. No accounts anywhere but the device in your hands.
 [![CI](https://github.com/izumicancode/Secure-Line/actions/workflows/ci.yml/badge.svg)](https://github.com/izumicancode/Secure-Line/actions/workflows/ci.yml)
 ![Version](https://img.shields.io/badge/version-3.2.0-39FF88)
 
+![Uploading screenshot-2026-07-16_23-24-31.png…]()
+
+
 </div>
 
 <br>
