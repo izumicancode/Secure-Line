@@ -142,7 +142,7 @@ touches real `line_data/`. CI runs it on Python 3.10–3.12 on every push.
   ephemeral mode in the header to stop writing anything to disk at all.
 - **Panic wipe.** Deletes your identity, your store, and your
   device-account binding. Immediate, irreversible, no confirmation
-  beyond the one dialog.
+  beyond the one dialog ,completely deletes the local storage.
 
 This is a LAN chat tool built for a specific trust model (people who can
 already reach your network), not a hardened messaging platform — treat
