@@ -1,7 +1,7 @@
 """Per-recipient store-and-forward mailbox. A message that can't be
 delivered right now (recipient offline / unreachable) waits here —
 capped in count and age — until the recipient is seen online again, at
-which point node/messaging.py flushes everything queued for them."""
+which point node/messaging.py flushes everything queued for them and if connected to the same network no need to open the app it does it's job in the background ."""
 import collections
 import threading
 import time
