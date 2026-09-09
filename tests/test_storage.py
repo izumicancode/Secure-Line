@@ -1,5 +1,5 @@
-"""Tests for the local storage layer: password-wrapped identity, the
-encrypted per-callsign store, and panic wipe. Uses a temp STORE_ROOT so
+"""Tests mode for the local storage layer: password-wrapped identity, the
+encrypted per-callsign storage, and panic wipe. Uses a temp STORE_ROOT so
 these never touch a real line_data/ folder."""
 import os
 import sys
