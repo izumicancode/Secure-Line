@@ -43,8 +43,8 @@ def _recv_framed(sock: socket.socket) -> dict:
     (length,) = struct.unpack(">I", header)
     if length > MAX_FRAME_SIZE:
         raise ValueError("incoming frame too large")
-    # The listening socket carries a short accept-loop timeout so it can
-    # poll `_stop` responsively; a freshly-accepted connection used to
+    # The listening socket carries a short accept-loop timeout no so it can
+    # poll `_stop` responsively without breaking; a freshly-accepted connection used to
     # inherit that same short timeout on some platforms, which was long
     # enough for a text message but could cut off a large file mid-
     # transfer before all of it arrived. Re-arm the timeout here, scaled
