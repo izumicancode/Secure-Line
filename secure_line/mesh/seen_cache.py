@@ -1,5 +1,5 @@
 """Bounded, thread-safe set of message ids we've already relayed or
-delivered, so a rebroadcast storm can't loop forever and a message
+delivered, so a rebroadcast storm won't loop forever and a message
 doesn't get shown twice after taking two different mesh paths."""
 import collections
 import threading
