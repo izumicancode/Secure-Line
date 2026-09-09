@@ -1,4 +1,4 @@
-"""Mesh relay / store-and-forward tuning.
+"""Mesh relay / store-and-forward tuning on system network.
 
 LAN messages travel one broadcast hop for free; MESH_MAX_HOPS lets a node
 re-broadcast a message it isn't the target of, so delivery still works
