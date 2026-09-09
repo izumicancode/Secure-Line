@@ -1,4 +1,4 @@
-"""LineApp mixin: joining/creating a channel (with an optional shared
+"""SecureLineApp mixin: joining/creating a channel (with an optional shared
 password), switching the chat pane into a channel, and leaving/deleting
 one -- only the local creator of a channel gets a delete button; everyone
 else only ever sees leave. See node/channels.py for the trust model
