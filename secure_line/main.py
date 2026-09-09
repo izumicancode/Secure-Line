@@ -1,4 +1,4 @@
-"""Entry point: prepares the local data directory and display, then hands
+"""Starting point to prepares the local data directory and display, then hands
 off to LineApp. Run with `python -m secure_line`."""
 import argparse
 import sys
