@@ -97,8 +97,8 @@ class _LayoutMixin:
                   relief="flat", cursor="hand2", command=self._open_join_channel_dialog,
                   activebackground=HULL, activeforeground=SIGNAL_HOVER).pack(side="right")
 
-        self.channel_list = tk.Frame(self.sidebar, bg=HULL)
-        self.channel_list.pack(fill="x", padx=6)
+        self.channel_list = self._build_scrollable_list(
+            self.sidebar, max_height=144, fill="x", expand=False, padx=6)
 
         tk.Frame(self.sidebar, bg=LINE, height=1).pack(fill="x", pady=10, padx=10)
 
@@ -106,8 +106,28 @@ class _LayoutMixin:
         peer_row.pack(fill="x", padx=10)
         tk.Label(peer_row, text="PEERS ON THE LINE", font=MONO_SMALL, bg=HULL, fg=TEXT_FAINT).pack(side="left")
 
-        self.peer_list = tk.Frame(self.sidebar, bg=HULL)
-        self.peer_list.pack(fill="both", expand=True, padx=6, pady=(4, 10))
+        self.peer_list = self._build_scrollable_list(
+            self.sidebar, max_height=320, fill="both", expand=True, padx=6, pady=(4, 10))
+
+    def _build_scrollable_list(self, parent, *, max_height, fill, expand, padx=0, pady=0):
+        viewport = tk.Frame(parent, bg=HULL)
+        viewport.pack(fill=fill, expand=expand, padx=padx, pady=pady)
+        canvas = tk.Canvas(viewport, bg=HULL, height=max_height, highlightthickness=0, bd=0)
+        scrollbar = tk.Scrollbar(viewport, orient="vertical", command=canvas.yview)
+        canvas.configure(yscrollcommand=scrollbar.set)
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+
+        content = tk.Frame(canvas, bg=HULL)
+        window = canvas.create_window((0, 0), window=content, anchor="nw")
+
+        def update_scroll_region(_event=None):
+            canvas.configure(scrollregion=canvas.bbox("all"))
+            canvas.configure(height=max(1, min(content.winfo_reqheight(), max_height)))
+
+        content.bind("<Configure>", update_scroll_region)
+        canvas.bind("<Configure>", lambda event: canvas.itemconfigure(window, width=event.width))
+        return content
 
     def _build_chat_pane(self, parent):
         pane = tk.Frame(parent, bg=VOID)
