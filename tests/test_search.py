@@ -58,6 +58,12 @@ def test_search_respects_limit():
     assert len(results) == 3
 
 
+def test_search_nonpositive_limit_returns_no_results():
+    histories = {"bob": [_entry("bob", "apple", 1)]}
+    assert search_histories(histories, "apple", limit=0) == []
+    assert search_histories(histories, "apple", limit=-1) == []
+
+
 def test_search_empty_query_returns_nothing():
     histories = {"bob": [_entry("bob", "hello", 1)]}
     assert search_histories(histories, "") == []

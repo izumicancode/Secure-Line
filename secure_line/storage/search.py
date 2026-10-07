@@ -36,14 +36,13 @@ def search_histories(histories: dict, query: str, *, case_sensitive: bool = Fals
     capped at `limit` so a broad query on a huge history stays cheap.
     """
     query = query if case_sensitive else query.lower()
-    if not query:
+    if not query or limit <= 0:
         return []
     results: list[SearchResult] = []
     for convo, entries in histories.items():
         for i, entry in enumerate(entries):
             if entry.kind not in kinds:
                 continue
-            haystack = entry.text if entry.kind == "text" else (entry.file_path or "")
             haystack_name = getattr(entry, "file_path", "") or ""
             if _matches(entry.text or "", query, case_sensitive) or \
                (entry.kind == "file" and _matches(haystack_name, query, case_sensitive)):
