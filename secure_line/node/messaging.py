@@ -8,6 +8,7 @@ import time
 from ..constants import (RELAY_RETRY_MS, MIN_DELIVERY_TIMEOUT, DELIVERY_SECONDS_PER_MB,
                          CONNECT_TIMEOUT, IDLE_CONN_TIMEOUT)
 from ..crypto import derive_root_key, Ratchet, encrypt_with_key, decrypt_with_key
+from ..netutils import valid_name
 from .wire import _new_mid, _send_framed, _recv_framed
 
 
@@ -247,18 +248,25 @@ class _MessagingMixin:
 
     def _handle_dm(self, envelope: dict):
         peer_name = envelope.get("from")
-        if not peer_name:
+        mid = envelope.get("mid", "")
+        number = envelope.get("n")
+        kind = envelope.get("kind", "text")
+        if (not isinstance(peer_name, str) or not valid_name(peer_name)
+                or peer_name == self.name
+                or not isinstance(mid, str) or not mid
+                or type(number) is not int or number < 0
+                or kind not in ("text", "file")
+                or not isinstance(envelope.get("nonce"), str)
+                or not isinstance(envelope.get("ct"), str)):
             return
         try:
             ratchet = self._ratchet_for(peer_name)
-            n = int(envelope["n"])
-            msg_key = ratchet.recv_key_for(n)
+            msg_key = ratchet.recv_key_for(number)
             if msg_key is None:
                 return  # replay or out-of-window — silently drop
-            aad = f"{peer_name}->{self.name}:{n}".encode("utf-8")
+            aad = f"{peer_name}->{self.name}:{number}".encode("utf-8")
             plaintext = decrypt_with_key(msg_key, aad, envelope["nonce"], envelope["ct"])
         except Exception:
             return
-        self._emit("dm_received", peer=peer_name, mid=envelope.get("mid", ""),
-                   text=plaintext, msg_kind=envelope.get("kind", "text"))
-        self.send_receipt(peer_name, envelope.get("mid", ""), "delivered")
+        self._emit("dm_received", peer=peer_name, mid=mid, text=plaintext, msg_kind=kind)
+        self.send_receipt(peer_name, mid, "delivered")
