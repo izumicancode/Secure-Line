@@ -290,14 +290,32 @@ class _MessagingMixin:
     # Message rendering
     # ------------------------------------------------------------------
     def _render_messages(self):
+        key = self._history_key()
+        same_history = key is not None and key == getattr(self, "_rendered_history_key", None)
+        scroll_top, scroll_bottom = self.msg_canvas.yview()
+        follow_tail = not same_history or scroll_bottom >= 0.98
+        self._rendered_history_key = key
+
         for w in self.msg_frame.winfo_children():
             w.destroy()
-        key = self._history_key()
         if key is None:
             return
         for entry in self.histories.get(key, [])[-400:]:
             self._render_one_entry(entry)
-        self.root.after(30, lambda: self.msg_canvas.yview_moveto(1.0))
+
+        pending_scroll = getattr(self, "_message_scroll_after_id", None)
+        if pending_scroll is not None:
+            try:
+                self.root.after_cancel(pending_scroll)
+            except Exception:
+                pass
+        target = 1.0 if follow_tail else scroll_top
+
+        def restore_scroll():
+            self._message_scroll_after_id = None
+            self.msg_canvas.yview_moveto(target)
+
+        self._message_scroll_after_id = self.root.after(30, restore_scroll)
 
     def _render_one_entry(self, entry: ChatEntry):
         row = tk.Frame(self.msg_frame, bg=VOID)
