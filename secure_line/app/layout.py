@@ -12,6 +12,12 @@ class _LayoutMixin:
     _resize_after_id = None
 
     def _scroll_messages(self, event):
+        widget = getattr(event, "widget", None)
+        while widget is not None and widget is not self.message_area:
+            widget = getattr(widget, "master", None)
+        if widget is None:
+            return
+
         button = getattr(event, "num", None)
         if button == 4:
             units = -1
@@ -124,6 +130,7 @@ class _LayoutMixin:
 
         canvas_wrap = tk.Frame(pane, bg=VOID)
         canvas_wrap.pack(fill="both", expand=True)
+        self.message_area = canvas_wrap
         self.msg_canvas = tk.Canvas(canvas_wrap, bg=VOID, highlightthickness=0, bd=0)
         vsb = tk.Scrollbar(canvas_wrap, orient="vertical", command=self.msg_canvas.yview)
         self.msg_canvas.configure(yscrollcommand=vsb.set)
