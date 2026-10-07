@@ -104,10 +104,10 @@ pip install -e .[dev]
 pytest tests/ -v
 ```
 
-The test suite (36 tests) covers the crypto core, the storage layer,
-search, and export — everything that doesn't need a display. It runs
-against a temp store directory, so it's safe to run repeatedly and never
-touches real `line_data/`. CI runs it on Python 3.10–3.12 on every push.
+The headless test suite covers cryptography, storage, validation, wire
+framing, search, and export. It runs against a temporary store directory,
+so it's safe to repeat and never touches real `line_data/`. CI runs it
+on Python 3.10–3.12 on every push.
 
 <br>
 

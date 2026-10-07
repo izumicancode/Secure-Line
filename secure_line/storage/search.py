@@ -2,8 +2,8 @@
 
 This never touches the network or re-encrypts anything — it operates on
 the same in-memory `ChatEntry` objects the app already holds after
-`load_store` + reconstruction, and is used by the search bar in the UI
-(`app/messaging.py`) as well as being usable standalone/for tests.
+`load_store` + reconstruction, and is designed for future UI integration
+as well as standalone use and tests.
 """
 from __future__ import annotations
 
