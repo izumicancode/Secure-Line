@@ -11,6 +11,20 @@ from ..widgets import make_round_button
 class _LayoutMixin:
     _resize_after_id = None
 
+    def _scroll_messages(self, event):
+        button = getattr(event, "num", None)
+        if button == 4:
+            units = -1
+        elif button == 5:
+            units = 1
+        else:
+            delta = getattr(event, "delta", 0)
+            if not delta:
+                return
+            units = -int(delta / 120) if abs(delta) >= 120 else (-1 if delta > 0 else 1)
+        self.msg_canvas.yview_scroll(units, "units")
+        return "break"
+
     def _on_msg_canvas_configure(self, event):
         self.msg_canvas.itemconfig(self._msg_window, width=event.width)
         last_w = getattr(self, "_last_msg_canvas_w", None)
@@ -120,8 +134,8 @@ class _LayoutMixin:
         self.msg_frame.bind("<Configure>",
                              lambda _e: self.msg_canvas.configure(scrollregion=self.msg_canvas.bbox("all")))
         self.msg_canvas.bind("<Configure>", self._on_msg_canvas_configure)
-        self.msg_canvas.bind_all("<MouseWheel>",
-                                  lambda e: self.msg_canvas.yview_scroll(int(-e.delta / 120), "units"))
+        for mousewheel_event in ("<MouseWheel>", "<Button-4>", "<Button-5>"):
+            self.msg_canvas.bind_all(mousewheel_event, self._scroll_messages)
 
         composer = tk.Frame(pane, bg=HULL, height=58, highlightthickness=1, highlightbackground=LINE)
         composer.pack(fill="x", side="bottom")
