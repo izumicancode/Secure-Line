@@ -10,10 +10,31 @@ import time
 
 from ..constants import DISCOVERY_PORT, HEARTBEAT_INTERVAL, PEER_TIMEOUT
 from ..crypto import b64e, b64d
+from ..constants import MESH_MAX_HOPS
 from ..mesh import should_relay, next_hop_count
 from ..models import Peer
-from ..netutils import local_ips, broadcast_targets
+from ..netutils import local_ips, broadcast_targets, valid_name
 from .wire import _new_mid
+
+
+def _parse_announce(msg: dict):
+    name = msg.get("name")
+    pub = msg.get("pub")
+    hops = msg.get("hops", 0)
+    port = msg.get("port")
+    if not valid_name(name) or not isinstance(pub, str):
+        return None
+    if type(hops) is not int or not 0 <= hops <= MESH_MAX_HOPS:
+        return None
+    if type(port) is not int or not 1 <= port <= 65535:
+        return None
+    try:
+        pub_bytes = b64d(pub)
+    except (ValueError, UnicodeError):
+        return None
+    if len(pub_bytes) != 32:
+        return None
+    return name, pub_bytes, hops, port
 
 
 class _DiscoveryMixin:
@@ -63,16 +84,13 @@ class _DiscoveryMixin:
                 self._handle_channel_disband(msg)
 
     def _handle_announce(self, msg: dict, addr, my_ips: set):
-        name = msg.get("name")
+        parsed = _parse_announce(msg)
+        if parsed is None:
+            return
+        name, pub_bytes, hops, chat_port = parsed
         if not name or name == self.name:
             return
         ip = addr[0]
-        try:
-            pub_bytes = b64d(msg["pub"])
-        except Exception:
-            return
-        hops = int(msg.get("hops", 0))
-        chat_port = int(msg["port"])
         existing = self.peers.get(name)
         was_new = existing is None
         addr_changed = (not was_new) and (existing.ip != ip or existing.chat_port != chat_port)
