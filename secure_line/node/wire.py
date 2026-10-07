@@ -22,13 +22,13 @@ def _new_mid() -> str:
 
 
 def _recv_exact(sock: socket.socket, n: int) -> bytes:
-    buf = b""
+    buf = bytearray()
     while len(buf) < n:
         chunk = sock.recv(n - len(buf))
         if not chunk:
             raise ConnectionError("peer closed connection")
-        buf += chunk
-    return buf
+        buf.extend(chunk)
+    return bytes(buf)
 
 
 def _send_framed(sock: socket.socket, payload: dict):
