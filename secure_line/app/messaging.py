@@ -178,7 +178,8 @@ class _MessagingMixin:
             with open(path, "rb") as f:
                 raw = f.read()
         except OSError as e:
-            self.root.after(0, lambda: messagebox.showerror("Read error", str(e)))
+            error = str(e)
+            self.root.after(0, lambda error=error: messagebox.showerror("Read error", error))
             return
         self._send_raw_attachment(raw, os.path.basename(path), target)
 
@@ -186,7 +187,8 @@ class _MessagingMixin:
         try:
             raw, filename = _zip_folder(path)
         except OSError as e:
-            self.root.after(0, lambda: messagebox.showerror("Read error", str(e)))
+            error = str(e)
+            self.root.after(0, lambda error=error: messagebox.showerror("Read error", error))
             return
         self._send_raw_attachment(raw, filename, target)
 
@@ -211,7 +213,8 @@ class _MessagingMixin:
             with open(local_path, "wb") as f:
                 f.write(raw)
         except OSError as e:
-            self.root.after(0, lambda: messagebox.showerror("Couldn't save locally", str(e)))
+            error = str(e)
+            self.root.after(0, lambda error=error: messagebox.showerror("Couldn't save locally", error))
             return
         mime = mimetypes.guess_type(filename)[0] or ""
 
