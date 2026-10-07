@@ -53,6 +53,8 @@ class Ratchet:
         with self.lock:
             if n < self.recv_n:
                 return self.skipped.pop(n, None)
+            if n - self.recv_n > MAX_SKIPPED_KEYS:
+                return None
             while self.recv_n < n:
                 candidate, self.recv_chain = _chain_step(self.recv_chain)
                 self.skipped[self.recv_n] = candidate
