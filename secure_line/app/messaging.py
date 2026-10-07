@@ -64,6 +64,12 @@ def _unique_path(folder: str, filename: str) -> str:
     return candidate
 
 
+def _read_file_limited(path: str, limit: int) -> bytes | None:
+    with open(path, "rb") as f:
+        data = f.read(limit + 1)
+    return None if len(data) > limit else data
+
+
 class _MessagingMixin:
     def _open_dm(self, peer_name):
         self.active_chat = peer_name
@@ -175,11 +181,14 @@ class _MessagingMixin:
 
     def _send_file_worker(self, path, target):
         try:
-            with open(path, "rb") as f:
-                raw = f.read()
+            raw = _read_file_limited(path, MAX_FILE_SIZE)
         except OSError as e:
             error = str(e)
             self.root.after(0, lambda error=error: messagebox.showerror("Read error", error))
+            return
+        if raw is None:
+            self.root.after(0, lambda: messagebox.showerror(
+                "Too large", f"Attachments are capped at {human_file_size(MAX_FILE_SIZE)}."))
             return
         self._send_raw_attachment(raw, os.path.basename(path), target)
 
