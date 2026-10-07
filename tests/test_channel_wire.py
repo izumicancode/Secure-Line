@@ -53,3 +53,19 @@ def test_channel_disband_drops_invalid_field_types_before_deduplication():
         node._handle_channel_disband(message)
 
     assert node.seen.ids == []
+
+
+def test_channel_file_drops_invalid_field_types_before_deduplication():
+    node = object.__new__(_ChannelsMixin)
+    node.name = "self"
+    node.seen = SeenRecorder()
+
+    for envelope in (
+        {"mid": [], "channel": "#general", "from": "peer"},
+        {"mid": "id", "channel": [], "from": "peer"},
+        {"mid": "id", "channel": "#general", "from": []},
+        {"mid": "id", "channel": "bad name", "from": "peer"},
+    ):
+        node._handle_channel_file(envelope)
+
+    assert node.seen.ids == []

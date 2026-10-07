@@ -106,7 +106,9 @@ class _ChannelsMixin:
         mid = envelope.get("mid", "")
         channel_name = envelope.get("channel", "")
         sender = envelope.get("from", "")
-        if not mid or not channel_name or sender == self.name:
+        if (not isinstance(mid, str) or not mid
+                or not isinstance(channel_name, str) or not valid_channel_name(channel_name)
+                or not isinstance(sender, str) or not valid_name(sender) or sender == self.name):
             return
         if self.seen.seen_before(mid):
             return
