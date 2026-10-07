@@ -20,6 +20,7 @@ import base64
 from ..constants import MESH_MAX_HOPS
 from ..crypto import encrypt_with_key, decrypt_with_key
 from ..mesh import should_relay, next_hop_count
+from ..netutils import valid_channel_name, valid_name
 from .wire import _new_mid
 
 
@@ -53,7 +54,9 @@ class _ChannelsMixin:
         mid = msg.get("mid", "")
         channel_name = msg.get("channel", "")
         sender = msg.get("from", "")
-        if not mid or not channel_name or sender == self.name:
+        if (not isinstance(mid, str) or not mid
+            or not isinstance(channel_name, str) or not valid_channel_name(channel_name)
+            or not isinstance(sender, str) or not valid_name(sender) or sender == self.name):
             return
         hops = msg.get("hops", 0)
         if type(hops) is not int or not 0 <= hops <= MESH_MAX_HOPS:
