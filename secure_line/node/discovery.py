@@ -37,6 +37,14 @@ def _parse_announce(msg: dict):
     return name, pub_bytes, hops, port
 
 
+def _decode_wire_message(data: bytes):
+    try:
+        message = json.loads(data.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        return None
+    return message if isinstance(message, dict) else None
+
+
 class _DiscoveryMixin:
     def _announce_loop(self):
         while not self._stop.is_set():
@@ -71,9 +79,8 @@ class _DiscoveryMixin:
                 continue
             except OSError:
                 break
-            try:
-                msg = json.loads(data.decode("utf-8"))
-            except Exception:
+            msg = _decode_wire_message(data)
+            if msg is None:
                 continue
             mtype = msg.get("type")
             if mtype == "announce":

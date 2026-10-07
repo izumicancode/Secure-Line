@@ -1,5 +1,5 @@
 from secure_line.crypto import b64e
-from secure_line.node.discovery import _parse_announce
+from secure_line.node.discovery import _decode_wire_message, _parse_announce
 
 
 def _announce(**overrides):
@@ -25,3 +25,10 @@ def test_parse_announce_rejects_bad_name_and_public_key():
     assert _parse_announce(_announce(name="bad name")) is None
     assert _parse_announce(_announce(pub="not-base64!")) is None
     assert _parse_announce(_announce(pub=b64e(b"short"))) is None
+
+
+def test_decode_wire_message_only_accepts_json_objects():
+    assert _decode_wire_message(b'{"type":"announce"}') == {"type": "announce"}
+    assert _decode_wire_message(b"[]") is None
+    assert _decode_wire_message(b"42") is None
+    assert _decode_wire_message(b"\xff") is None
