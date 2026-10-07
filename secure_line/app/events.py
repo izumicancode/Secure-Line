@@ -106,7 +106,7 @@ class _EventsMixin:
         (path, size) -- (\"\", 0) if it couldn't be decoded/saved, in
         which case the resulting ChatEntry just shows as unavailable."""
         try:
-            raw = base64.b64decode(b64_data)
+            raw = base64.b64decode(b64_data, validate=True)
         except Exception:
             return "", 0
         folder = os.path.join(STORE_ROOT, RECEIVED_FILES_DIRNAME)
