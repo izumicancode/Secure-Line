@@ -9,6 +9,8 @@ from ..constants import SEEN_ID_CACHE
 
 class SeenCache:
     def __init__(self, maxlen=SEEN_ID_CACHE):
+        if maxlen < 1:
+            raise ValueError("maxlen must be positive")
         self._order = collections.deque(maxlen=maxlen)
         self._set = set()
         self._lock = threading.Lock()
