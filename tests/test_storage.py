@@ -55,6 +55,23 @@ def test_device_already_has_account_guard(isolated_store):
         create_account("dave", "pw2")
 
 
+def test_create_account_does_not_overwrite_existing_identity(isolated_store):
+    from secure_line.storage.identity import (
+        create_account, unlock_account, DeviceAlreadyHasAccount,
+    )
+    from cryptography.hazmat.primitives.serialization import Encoding, PrivateFormat, NoEncryption
+
+    original = create_account("erin", "original-password")
+    original_bytes = original.private_bytes(Encoding.Raw, PrivateFormat.Raw, NoEncryption())
+
+    with pytest.raises(DeviceAlreadyHasAccount):
+        create_account("erin", "new-password")
+
+    restored = unlock_account("erin", "original-password")
+    restored_bytes = restored.private_bytes(Encoding.Raw, PrivateFormat.Raw, NoEncryption())
+    assert restored_bytes == original_bytes
+
+
 def test_account_exists(isolated_store):
     from secure_line.storage.identity import create_account
     from secure_line.storage.paths import account_exists

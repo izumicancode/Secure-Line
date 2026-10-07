@@ -10,7 +10,8 @@ from cryptography.hazmat.primitives.serialization import Encoding, PrivateFormat
 from cryptography.exceptions import InvalidTag
 
 from ..constants import ACCOUNT_SALT_BYTES, ACCOUNT_SCRYPT_N, ACCOUNT_SCRYPT_R, ACCOUNT_SCRYPT_P
-from .paths import _peer_dir, _identity_path, get_device_account_name, set_device_account_name
+from .paths import (_peer_dir, _identity_path, get_device_account_name,
+                    set_device_account_name)
 
 
 class WrongPassword(Exception):
@@ -52,6 +53,10 @@ def create_account(name: str, password: str) -> x25519.X25519PrivateKey:
         raise DeviceAlreadyHasAccount(
             f"this device already has an account ({existing!r}); "
             "wipe it first to create a different one")
+    if os.path.exists(_identity_path(name)):
+        raise DeviceAlreadyHasAccount(
+            f"an identity for {name!r} already exists on this device; "
+            "unlock it instead of creating a new one")
     key = x25519.X25519PrivateKey.generate()
     raw = key.private_bytes(Encoding.Raw, PrivateFormat.Raw, NoEncryption())
     _write_identity_file(name, password, raw)
