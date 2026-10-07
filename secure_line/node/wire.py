@@ -22,6 +22,8 @@ def _new_mid() -> str:
 
 
 def _recv_exact(sock: socket.socket, n: int) -> bytes:
+    if n < 0:
+        raise ValueError("read length cannot be negative")
     buf = bytearray()
     while len(buf) < n:
         chunk = sock.recv(n - len(buf))
