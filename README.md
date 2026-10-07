@@ -54,8 +54,8 @@ for your phone number.
 | ⭐ **Favorites**                   | Pin the people you talk to most to the top of your peer list. |
 | ✅ **Safety numbers**              | Compare a short fingerprint out-of-band with a peer and mark them verified — the same trust model Signal popularized. |
 | ☢️ **Panic wipe**                  | One confirmed tap instantly and irreversibly deletes your local identity and history. No undo, on purpose. |
-| 🔍 **Chat search**                 | Search every DM and channel at once, with matches highlighted — all local, over already-decrypted history. |
-| 📤 **Conversation export**         | Export any DM or channel to a Markdown transcript or JSON, on demand — nothing is exported automatically. |
+| 🔍 **Local chat search API**       | Search decrypted DM and channel histories with optional case sensitivity and match highlighting. GUI search is not yet available. |
+| 📤 **Conversation export API**     | Export a conversation to Markdown or JSON on demand. GUI export is not yet available. |
 
 <br>
 
@@ -141,8 +141,8 @@ touches real `line_data/`. CI runs it on Python 3.10–3.12 on every push.
   encrypted with a key derived from your account password. Turn on
   ephemeral mode in the header to stop writing anything to disk at all.
 - **Panic wipe.** Deletes your identity, your store, and your
-  device-account binding. Immediate, irreversible, no confirmation
-  beyond the one dialog ,completely deletes the local storage.
+  device-account binding. It is immediate and irreversible after the
+  confirmation dialog.
 
 This is a LAN chat tool built for a specific trust model (people who can
 already reach your network), not a hardened messaging platform — treat

@@ -121,6 +121,14 @@ def test_ratchet_out_of_order_delivery():
     assert bob.recv_key_for(n1) == k1
 
 
+def test_ratchet_rejects_excessive_counter_gap_without_advancing():
+    ratchet = Ratchet(os.urandom(32), am_i_a=False)
+
+    assert ratchet.recv_key_for(10**9) is None
+    assert ratchet.recv_n == 0
+    assert ratchet.skipped == {}
+
+
 def test_ratchet_export_import_state():
     root = os.urandom(32)
     alice = Ratchet(root, am_i_a=True)
