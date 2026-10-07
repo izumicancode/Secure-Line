@@ -17,6 +17,7 @@ how that gates the delete button.
 """
 import base64
 
+from ..constants import MESH_MAX_HOPS
 from ..crypto import encrypt_with_key, decrypt_with_key
 from ..mesh import should_relay, next_hop_count
 from .wire import _new_mid
@@ -54,10 +55,12 @@ class _ChannelsMixin:
         sender = msg.get("from", "")
         if not mid or not channel_name or sender == self.name:
             return
+        hops = msg.get("hops", 0)
+        if type(hops) is not int or not 0 <= hops <= MESH_MAX_HOPS:
+            return
         if self.seen.seen_before(mid):
             return
         key = self.channel_keys.get(channel_name)
-        hops = int(msg.get("hops", 0))
         if key is not None:
             try:
                 aad = f"channel:{channel_name}:{mid}".encode("utf-8")
