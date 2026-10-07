@@ -8,4 +8,4 @@ def b64e(data: bytes) -> str:
 
 
 def b64d(data: str) -> bytes:
-    return base64.b64decode(data.encode("ascii"))
+    return base64.b64decode(data.encode("ascii"), validate=True)

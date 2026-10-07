@@ -2,6 +2,7 @@
 channel keys. No networking, storage, or UI involved."""
 import os
 import sys
+import binascii
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
@@ -17,6 +18,13 @@ from secure_line.crypto import (
 def test_b64_roundtrip():
     data = os.urandom(37)
     assert b64d(b64e(data)) == data
+
+
+def test_b64_rejects_non_alphabet_characters():
+    import pytest
+
+    with pytest.raises(binascii.Error):
+        b64d("YWJj$")
 
 
 def test_fingerprint_deterministic_and_formatted():
